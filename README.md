@@ -1,7 +1,6 @@
 # Wellesley-College-Simulator
 Class GameStat
   -variables: Year, month, energy
-  -PlayerStat()
   -isEnding()
   -isEnergyZero()
 
