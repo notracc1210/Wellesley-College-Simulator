@@ -65,7 +65,7 @@ class EventNode {
         options.add(c);
     }
 }
-    // The Hash Table you mentioned in your report
+    // The Hash Map
     private Map<String, EventNode> storyMap; 
     private EventNode currentEvent;
     private StudentStats currentStats;
