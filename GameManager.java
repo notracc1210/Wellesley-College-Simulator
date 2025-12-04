@@ -70,6 +70,7 @@ class EventNode {
     private EventNode currentEvent;
     private StudentStats currentStats;
     private String[] RAlist;
+    private Calendar yearCal;
 
     public GameManager() {
         storyMap = new HashMap<>();
@@ -77,6 +78,7 @@ class EventNode {
         loadStory(); // Builds the tree/graph
         String[] RAlist = {"Tara", "Ellie", "Paige", "Maya", "Carmen"};
         this.RAlist = RAlist;
+        yearCal = new Calendar();
     }
 
     // This is where we "Build the Tree"
