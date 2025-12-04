@@ -1,14 +1,14 @@
 # Wellesley-College-Simulator
 Class GameStat
-  -Year, month, energy
-  -PlyaerStat
-  -isEnding
-  -isEnergyZero
+  -variable: Year, month, energy
+  -PlyaerStat()
+  -isEnding()
+  -isEnergyZero()
 
 Class PlayerStat
-  -Happiness, health, socialConnection, GPA
+  -variables: Happiness, health, socialConnection, GPA
   -performConsequenes(+-)
-  -isValidStat
+  -isValidStat()
 
 Class EventandConsequences
   -Hashmap for Location
