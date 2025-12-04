@@ -1,1 +1,1 @@
-# Wellesley-College-SImulator
+# Wellesley-College-Simulator
