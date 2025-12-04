@@ -1,3 +1,8 @@
+/**
+* A class to store the current game stats, including the framework of keeping track of the time throughout the game
+* @author (Melody Lyu)
+* @date (Dec.4, 2025)
+**/
 public int year;
 public int month;
 public int currentEnergy;
