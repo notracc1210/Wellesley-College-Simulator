@@ -77,6 +77,39 @@ public class GameManager {
         }
     }
 
+    //4. Calender class - I moved this here
+    public class Calendar {
+        private Map<Integer, Map<String, List<EventNode>>> academicCalendar;
+
+        public Calendar() {
+            this.academicCalendar = new HashMap<>();
+        }
+
+        public void addEvent(int year, String month, EventNode event) {
+            // Step 1: Check if the Year exists. If not, add it.
+            academicCalendar.computeIfAbsent(year, k -> new HashMap<>());
+
+            // Step 2: Get the map for that year
+            Map<String, List<EventNode>> yearMap = academicCalendar.get(year);
+
+            // Step 3: Check if the Month exists in that year. If not, add it.
+            yearMap.computeIfAbsent(month, k -> new ArrayList<>());
+
+            // Step 4: Add the event to the list
+            yearMap.get(month).add(event);
+        }
+
+        public List<EventNode> getEventsForMonth(int year, String month) {
+            if (academicCalendar.containsKey(year)) {
+                Map<String, List<EventNode>> yearMap = academicCalendar.get(year);
+                if (yearMap.containsKey(month)) {
+                    return yearMap.get(month);
+                }
+            }
+            return new ArrayList<>(); 
+        }
+    }
+
     // --- GAME MANAGER FIELDS ---
 
     private Map<String, EventNode> storyMap; 
