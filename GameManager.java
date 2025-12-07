@@ -4,6 +4,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+/**
+* A class to manage game flow: navigation between locations, event processing, and player choice handling.
+* @author (Praslin Hayes)
+* @date (Dec.7, 2025)
+**/
+
 public class GameManager {
 
 
