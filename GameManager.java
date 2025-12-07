@@ -1,6 +1,3 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,57 +6,12 @@ import java.util.Random;
 
 public class GameManager {
 
-    // --- INNER CLASSES ---
 
-    // 1. Option Class
-    public class Option {
-        String text;             
-        String consequenceText;  // Text shown after picking this option
-        
-        // Stats consequences
-        double gpaEffect;       
-        int happinessEffect;
-        int socialEffect;
-        int healthEffect;        
-
-        public Option(String text, String consequenceText, int happy, int health, int social, double gpa) {
-            this.text = text;
-            this.consequenceText = consequenceText;
-            this.happinessEffect = happy;
-            this.healthEffect = health;
-            this.socialEffect = social;
-            this.gpaEffect = gpa;
-        }
-
-        public double getGPAChange() { return gpaEffect; }
-        public int getHappinessChange() { return happinessEffect; }
-        public int getSocialChange() { return socialEffect; }
-        public int getHealthChange() { return healthEffect; }
-    }
-
-    // 2. EventNode Class
-    public class EventNode {
-        String locationTag; // e.g., LULU, TOWER
-        String mainText;    
-        List<Option> options;
-
-        public EventNode(String location, String text) {
-            this.locationTag = location;
-            this.mainText = text;
-            this.options = new ArrayList<>();
-        }
-
-        public void addOption(Option c) {
-            options.add(c);
-        }
-    }
-
-    // --- FIELDS ---
-
-    private Map<String, List<EventNode>> locationEvents; // Stores all loaded events by location
-    private EventNode currentEvent;
-    private GameStat gameTracker; 
+    private Map<String, List<Context>> locationEvents; // Stores all loaded events by location
+    private Context currentEvent;
+    private gameStat gameTracker; 
     private Random random;
+    private DecisionTree decisionTree;
 
     // State flags
     private boolean isInNavigationMode; // True = Picking a location, False = In an event
@@ -67,75 +19,22 @@ public class GameManager {
 
     // --- CONSTRUCTOR ---
 
-    public GameManager(String filePath) {
+    public GameManager(hashForLocation loader) {
         locationEvents = new HashMap<>();
-        gameTracker = new GameStat(); 
+        gameTracker = new gameStat(); 
         random = new Random();
+        decisionTree = new DecisionTree();
         
         // 1. Load the text file content
-        importFile(filePath);
+        HashMap<String, ArrayList<Context>> loadedMap = loader.getMap();
+        for (String location : loadedMap.keySet()) {
+            locationEvents.put(location, new ArrayList<>(loadedMap.get(location)));
+        }
         
         // 2. Start the game in Navigation Mode
         setNavigationState();
     }
 
-    // --- FILE PARSING (Integrated from hashForLocation) ---
-
-    public void importFile(String fileName){
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String currentLocation = "";
-            EventNode tempNode = null;
-            String line = br.readLine();
-            
-            while(line != null){
-                line = line.trim();
-                
-                if(line.equals("A NEW CONTEXT BEGINS") || line.isEmpty()){
-                    // Do nothing, just skip
-                }
-                else if(line.startsWith("LOCATION:")){
-                    currentLocation = line.substring("LOCATION:".length()).trim();
-                }
-                else if(line.startsWith("CONTEXT:")){
-                    String contextText = line.substring("CONTEXT:".length()).trim();
-                    // Create a new event node
-                    tempNode = new EventNode(currentLocation, contextText);
-                }
-                else if(line.startsWith("OPTION:")){
-                    if (tempNode != null) {
-                        String optionLine = line.substring("OPTION:".length()).trim();
-                        // Split by pipe | to get: [Description] | [Consequence] | [Stats]
-                        String[] parts = optionLine.split("\\|");
-                        
-                        if (parts.length >= 3) {
-                            String optDesc = parts[0].trim();
-                            String optCons = parts[1].trim();
-                            String[] stats = parts[2].trim().split(",");
-                            
-                            // Parse stats: Happy, Health, Social, GPA
-                            int dHappy = Integer.parseInt(stats[0]);
-                            int dHealth = Integer.parseInt(stats[1]);
-                            int dSocial = Integer.parseInt(stats[2]);
-                            double dGPA = Double.parseDouble(stats[3]);
-                            
-                            tempNode.addOption(new Option(optDesc, optCons, dHappy, dHealth, dSocial, dGPA));
-                        }
-                    }
-                }
-                else if(line.startsWith("END")){
-                    // Save the finished node to the map
-                    if (tempNode != null && !currentLocation.isEmpty()) {
-                        locationEvents.putIfAbsent(currentLocation, new ArrayList<>());
-                        locationEvents.get(currentLocation).add(tempNode);
-                    }
-                }
-                
-                line = br.readLine();
-            }
-        } catch(IOException e){
-            System.out.println("Error reading file: " + e.getMessage());
-        }
-    }
 
     // --- GAME LOGIC ---
 
@@ -147,21 +46,20 @@ public class GameManager {
         isForcedRandomEvent = false;
 
         // Create a dummy node representing the map
-        EventNode navNode = new EventNode("MAP", "It is " + gameTracker.getSeason() + 
-            ". You have " + gameTracker.getCurrentEnergy() + " energy left today.\nWhere do you want to go?");
+        Context navContext = new Context("It is " + gameTracker.getSeason() + ". You have " + gameTracker.getCurrentEnergy() + " energy left today.\nWhere do you want to go?");
         
         // Add navigation options (these don't change stats, they just move you)
         // 0s for all stats because the cost is applied when the event starts
-        navNode.addOption(new Option("Go to Lulu (Dining)", "", 0, 0, 0, 0));
-        navNode.addOption(new Option("Go to Clapp (Library)", "", 0, 0, 0, 0));
-        navNode.addOption(new Option("Go to Jewett (Arts)", "", 0, 0, 0, 0));
-        navNode.addOption(new Option("Go to Science Center", "", 0, 0, 0, 0));
-        navNode.addOption(new Option("Go to Founders (Liberal Arts)", "", 0, 0, 0, 0));
-        navNode.addOption(new Option("Go to Tower (Dorm)", "", 0, 0, 0, 0));
-        navNode.addOption(new Option("Go to Chapel/Shuttle", "", 0, 0, 0, 0));
-        navNode.addOption(new Option("Go to Club/Lake", "", 0, 0, 0, 0)); // Mapped to CLUB in text file
+        navContext.addOption(new Option("Go to Lulu", new Consequence("", 0, 0, 0, 0.0)));
+        navContext.addOption(new Option("Go to Clapp (Library)", new Consequence("", 0, 0, 0, 0.0)));
+        navContext.addOption(new Option("Go to Jewett (Arts)", new Consequence("", 0, 0, 0, 0.0)));
+        navContext.addOption(new Option("Go to Science Center", new Consequence("", 0, 0, 0, 0.0)));
+        navContext.addOption(new Option("Go to Founders (Liberal Arts)", new Consequence("", 0, 0, 0, 0.0)));
+        navContext.addOption(new Option("Go to Tower (Dorm)", new Consequence("", 0, 0, 0, 0.0)));
+        navContext.addOption(new Option("Go to Chapel/Shuttle", new Consequence("", 0, 0, 0, 0.0)));
+        navContext.addOption(new Option("Go to Club/Lake", new Consequence("", 0, 0, 0, 0.0)));
 
-        currentEvent = navNode;
+        currentEvent = navContext;
     }
 
     /**
@@ -169,9 +67,9 @@ public class GameManager {
      */
     private void triggerLocationEvent(String locationKey) {
         if (locationEvents.containsKey(locationKey)) {
-            List<EventNode> events = locationEvents.get(locationKey);
+            List<Context> events = locationEvents.get(locationKey);
             // Pick a random event
-            EventNode next = events.get(random.nextInt(events.size()));
+            Context next = events.get(random.nextInt(events.size()));
             currentEvent = next;
             isInNavigationMode = false;
         } else {
@@ -192,12 +90,12 @@ public class GameManager {
         List<String> keys = new ArrayList<>(locationEvents.keySet());
         String randomKey = keys.get(random.nextInt(keys.size()));
         
-        List<EventNode> events = locationEvents.get(randomKey);
-        EventNode next = events.get(random.nextInt(events.size()));
+        List<Context> events = locationEvents.get(randomKey);
+        Context next = events.get(random.nextInt(events.size()));
         
-        // Override the text slightly to indicate it's the end of the day
+
         currentEvent = next;
-        // We handle the text display in the UI getter
+
     }
 
     /**
@@ -273,18 +171,7 @@ public class GameManager {
 
         PlayerStat p = gameTracker.getPlayerStats();
         
-        // Logic for different endings based on stats
-        if (p.getGPA() > 3.8 && p.getSocial() > 80) {
-            return "THE LEGEND ENDING: You graduated Summa Cum Laude while knowing everyone on campus. You are unstoppable.";
-        } else if (p.getGPA() > 3.8 && p.getSocial() < 40) {
-            return "THE LONE GENIUS ENDING: You have perfect grades, but your only friends are the library squirrels.";
-        } else if (p.getGPA() < 2.5 && p.getSocial() > 90) {
-            return "THE PARTY ENDING: You barely passed, but you're already famous. Who needs a degree when you have vibes?";
-        } else if (p.getHealth() < 20) {
-            return "THE BURNOUT ENDING: You survived, but at what cost? You need a 3-month nap.";
-        } else {
-            return "THE BALANCED ENDING: You did it! A solid degree, good friends, and a bright future.";
-        }
+        return decisionTree.getRoot().getAchievement(p);
     }
 
     // --- GETTERS FOR UI ---
@@ -296,7 +183,7 @@ public class GameManager {
         if (isForcedRandomEvent) {
             prefix = "[END OF DAY EVENT] \n";
         }
-        return prefix + currentEvent.mainText; 
+        return prefix + currentEvent.description; 
     }
     
     public List<Option> getCurrentOptions() { 
