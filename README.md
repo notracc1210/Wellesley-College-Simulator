@@ -199,7 +199,6 @@ END
 ## Development Environment
 - Language: Java
 - IDE: BlueJ (based on .ctxt files)
-- Project Type: Console-based text game
 
 ---
 
