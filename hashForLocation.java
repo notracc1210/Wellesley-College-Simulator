@@ -9,63 +9,6 @@ import java.io.*;
  * @version 2025.12.6
  */
 
-class Context
-{
-    String description;
-    ArrayList<Option> options;
-    
-    public Context(String d){
-        description = d;
-        options = new ArrayList<>();
-    }
-    
-    public void addOption(Option o){
-        options.add(o);
-    }
-    
-}
-
-class Option
-{
-    String description;
-    Consequence consequence;
-    
-    public Option(String d, Consequence c){
-        description = d;
-        consequence = c;
-    }
-    
-    public int getHappinessChange(){
-        return consequence.consequence_happiness;
-    }
-    
-    public int getHealthChange(){
-        return consequence.consequence_health;
-    }
-    
-    public int getSocialChange(){
-        return consequence.consequence_socialconnection;
-    }
-    
-    public double getGPAChange(){
-        return consequence.consequence_gpa;
-    }
-}
-
-class Consequence
-{
-    String description;
-    int consequence_happiness,consequence_socialconnection,consequence_health;
-    double consequence_gpa;
-    
-    public Consequence(String d, int h1, int h2, int sc, double g){
-        description = d;
-        consequence_happiness = h1;
-        consequence_health = h2;
-        consequence_socialconnection = sc;
-        consequence_gpa = g;
-    }
-}
 
 public class hashForLocation
 {
@@ -120,5 +63,9 @@ public class hashForLocation
             System.out.println("Fail to read");
         }
         
+    }
+
+    public HashMap<String, ArrayList<Context>> getMap(){
+        return map;
     }
 }
