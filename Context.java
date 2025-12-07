@@ -1,5 +1,11 @@
 import java.util.ArrayList;
 
+/**
+ * 在这里给出对类 hashForLocation 的描述。
+ * 
+ * @author Tracy
+ * @version 2025.12.7
+ */
 class Context
 {
     String description;
