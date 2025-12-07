@@ -1,15 +1,16 @@
 # Wellesley-College-Simulator
 
 ## Project Name
-Wellesley College  Simulator - A text-based decision-making game simulating college life at Wellesley College
+Wellesley College Simulator - A text-based decision-making game simulating college life at Wellesley College
 
 ## Project Goals
 This project is an interactive text-based simulation game where players navigate through their college experience at Wellesley College. Players make choices at various campus locations that affect their academic performance (GPA), happiness, health, and social connections. The game tracks progress over 4 academic years (32 months total) and determines the player's ending achievement based on their final statistics using a decision tree system.
 
 ## Version/Date
-- Version: 1.0
+- Version: 1.0 (Console/Text-based)
 - Date: December 2025
 - Last Updated: December 7, 2025
+- **Note**: This is Version 1, which can only be played through the driver class. A GUI version will be implemented in future updates.
 
 ## How to Start the Project
 
@@ -17,7 +18,9 @@ This project is an interactive text-based simulation game where players navigate
 - Java Development Kit (JDK) installed
 - A text file named "text for locations" containing game event data (must be in the same directory as the compiled classes)
 
-### Running the Game
+### Running the Game (Version 1.0 - Console Only)
+**Current Version**: The game is currently only playable through the command-line interface using the driver class. A GUI version is planned for future releases.
+
 1. Compile all Java files:
    ```bash
    javac *.java
@@ -199,8 +202,9 @@ END
 ## Development Environment
 - Language: Java
 - IDE: BlueJ (based on .ctxt files)
+- Project Type: Console-based text game (Version 1.0)
+- **Future Plans**: GUI implementation for enhanced user experience
 
 ---
 
 *This project was created for CS 230X at Wellesley College.*
-
