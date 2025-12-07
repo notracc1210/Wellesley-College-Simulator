@@ -16,6 +16,7 @@ public gameStat(){
   this.year = 1;
   this.month = 1;
   this.currentEnergy = 3;
+  this.pStats = new PlayerStat(); // <--- ADD THIS LINE
 }
 
 /**
