@@ -3,11 +3,11 @@
 * @author (Melody Lyu)
 * @date (Dec.4, 2025)
 **/
-public int year;
-public int month;
-public int currentEnergy;
+public int year; //1-4
+public int month; //1-8
+public int currentEnergy; //0-3
 private final int totalEnergy = 3;
-pStats = playerStat();
+private PlayerStat pStats;
 
 /**
 * Constructor for a new game
@@ -19,6 +19,19 @@ public gameStat(){
 }
 
 /**
+* Deduct one energy when player performs an action
+* Check if the energy is zero, then advance month
+**/
+public void useEnergy(){
+  if (currentEnergy > 0){
+    currentEnergy--;
+  }
+  if (isEnergyZero()){
+    advanceMonth();
+  }
+}
+
+/**
 * check if there is more energy to perform action in this month
 * @return boolean, true if energy is used up and should increment to the next month
 **/
@@ -27,23 +40,30 @@ private boolean isEnergyZero(){
 }
 
 /**
-* Helper method to check if the energy of the month is used up
-* if the energy is used up then increment to the next month
+* Reset energy at the start of each new month
 **/
-private void newMonth(){
-  if (isEnergyZero()){
-    month++;
+private void resetEnergy(){
+  currentEnergy = totalEnergy;
+}
+
+/**
+* If the energy is used up then increment to the next month
+* check if the all month in the academic year has passed, then increment year
+**/
+private void advanceMonth(){
+  month++;
+  resetEnergy();
+  if (month > 8){
+    advanceYear();
   }
 }
 
 /**
-* Helper method to check if there has been more than 8 month in the academic year, increment to next year
+* Helper method to increment to next academic year and reset month count
 **/
-private void newYear(){
-  if (this.month > 8){
-    year++;
-    month = 1;
-  }
+private void advanceYear(){
+  year++;
+  month = 1;
 }
 
 /** 
@@ -51,8 +71,13 @@ private void newYear(){
 * @return boolean, true if the game should end
 **/
 public boolean isEnding(){
-  boolean end? = false;
-  if (year > 4 || !pStats.isValidStat()){
-    end? = true;
-  }
+  return (year > 4) || !pStats.isValidStat();
 }
+
+/**
+* Getters for the instance variables
+**/
+public int getYear() {return year;}
+public int getMonth() {return month;}
+public int getCurrentEnergy() {return currentEnergy;}
+public PlayerStat getPlayerStats() {return pStats;}
