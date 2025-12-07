@@ -75,6 +75,35 @@ public boolean isEnding(){
 }
 
 /**
+ * Returns the season or finals period based on the game's month.
+ * Month mapping:
+ * 1 = Jan, 2 = Feb, 3 = Mar, 4 = Apr
+ * 5 = Sep, 6 = Oct, 7 = Nov, 8 = Dec
+ * @return String, text representation of the month
+ */
+public String getSeason() {
+    // Finals months: April (4) and December (8)
+    if (month == 4 || month == 8) {
+        return "Finals";
+    }
+    // Winter months: January (1) and February (2)
+    else if (month == 1 || month == 2) {
+        return "Winter";
+    }
+    // Spring month: March (3)
+    else if (month == 3) {
+        return "Spring";
+    }
+    // Fall months: September (5), October (6), November (7)
+    else if (month == 5 || month == 6 || month == 7) {
+        return "Fall";
+    }
+    else {
+        return "Unknown";
+    }
+}
+
+/**
 * Getters for the instance variables
 **/
 public int getYear() {return year;}
