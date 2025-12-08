@@ -142,7 +142,7 @@ public class GameManager {
             if (isForcedRandomEvent) {
                 // Since energy was 0, useEnergy() inside GameStat class should have already
                 // triggered advanceMonth() when we clicked the Navigation button previously.
-                // However, per your prompt: "Day ends after 3 actions AND the random event."
+                
                 
                 // We need to manually reset energy or allow the calendar to advance here.
                 // Assuming gameStat handles the advancement automatically when hitting 0,
