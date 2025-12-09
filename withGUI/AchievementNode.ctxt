@@ -1,0 +1,8 @@
+#BlueJ class context
+comment0.target=AchievementNode
+comment0.text=\n\ \u5728\u8FD9\u91CC\u7ED9\u51FA\u5BF9\u7C7B\ AchievementNode\ \u7684\u63CF\u8FF0\u3002\n\ \n\ @author\ (\u4F60\u7684\u540D\u5B57)\n\ @version\ (\u4E00\u4E2A\u7248\u672C\u53F7\u6216\u8005\u4E00\u4E2A\u65E5\u671F)\n
+comment1.params=aN\ aD
+comment1.target=AchievementNode(java.lang.String,\ java.lang.String)
+comment2.params=stat
+comment2.target=java.lang.String\ getAchievement(PlayerStat)
+numComments=3

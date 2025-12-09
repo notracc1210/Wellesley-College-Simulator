@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=hashForLocation
+comment1.params=d
+comment1.target=Context(java.lang.String)
+comment2.params=o
+comment2.target=void\ addOption(Option)
+comment3.params=fileName
+comment3.target=void\ importFile(java.lang.String)
+numComments=4

@@ -1,0 +1,16 @@
+#BlueJ class context
+comment0.target=DecisionNode
+comment0.text=\n\ \u5728\u8FD9\u91CC\u7ED9\u51FA\u5BF9\u7C7B\ DecisionNode\ \u7684\u63CF\u8FF0\u3002\n\ \n\ @author\ Tracy\n\ @version\ 2025.12.7\n
+comment1.params=c1\ o\ c2\ yes\ no
+comment1.target=DecisionNode(java.lang.String,\ java.lang.String,\ double,\ Node,\ Node)
+comment2.params=stat
+comment2.target=double\ getValue(PlayerStat)
+comment3.params=actual\ condition1\ operator1
+comment3.target=boolean\ compare(double,\ double,\ java.lang.String)
+comment4.params=stat
+comment4.target=java.lang.String\ getAchievement(PlayerStat)
+comment5.params=
+comment5.target=Node\ getYesChild()
+comment6.params=
+comment6.target=Node\ getNoChild()
+numComments=7
